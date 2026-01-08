@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nowaf Vision | Official Website</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: white; }
+        .hero-font { font-family: 'Orbitron', sans-serif; }
+        
+        /* Hero background with overlay for readability */
+        .hero-section {
+            background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.9)), 
+                        url('nowaf-vision.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .neon-border {
+            border: 2px solid #00f2ff;
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
+        }
+
+        .neon-text {
+            text-shadow: 0 0 10px rgba(186, 1, 255, 0.8);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="fixed w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold tracking-widest hero-font text-cyan-400">NOWAF VISION</div>
+            <div class="hidden md:flex space-x-8 font-medium">
+                <a href="#about" class="hover:text-cyan-400 transition">About</a>
+                <a href="#socials" class="hover:text-cyan-400 transition">Connect</a>
+            </div>
+            <a href="https://www.youtube.com/@nowafvision" target="_blank" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-6 py-2 rounded-full font-bold transition shadow-lg shadow-cyan-500/20">
+                Subscribe
+            </a>
+        </div>
+    </nav>
+
+    <header class="hero-section min-h-screen flex items-center justify-center px-6 text-center">
+        <div class="max-w-4xl">
+            <h1 class="text-6xl md:text-8xl font-bold mb-4 hero-font tracking-tighter neon-text">
+                NOWAF <span class="text-cyan-400">VISION</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-slate-300 mb-10 tracking-wide uppercase">
+                Digital Creator • Visual Artist • Tech Enthusiast
+            </p>
+            <div class="flex flex-wrap justify-center gap-6">
+                <a href="#socials" class="neon-border px-10 py-4 rounded-lg font-bold hover:bg-cyan-500 hover:text-slate-950 transition duration-300">
+                    My Work
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section id="socials" class="py-24 bg-slate-950">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-3xl font-bold hero-font text-center mb-16 text-cyan-400 tracking-widest">CONNECT WITH ME</h2>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <a href="https://www.youtube.com/@nowafvision" target="_blank" class="p-8 bg-slate-900 border border-slate-800 rounded-2xl hover:border-red-500 transition-all group">
+                    <h3 class="text-2xl font-bold mb-2 group-hover:text-red-500">YouTube</h3>
+                    <p class="text-slate-400 mb-4">Watch my latest visual content and tech reviews.</p>
+                    <span class="text-red-500 font-semibold underline underline-offset-4">Visit Channel →</span>
+                </a>
+
+                <a href="https://www.facebook.com/share/1PfieLvfCx/" target="_blank" class="p-8 bg-slate-900 border border-slate-800 rounded-2xl hover:border-blue-500 transition-all group">
+                    <h3 class="text-2xl font-bold mb-2 group-hover:text-blue-500">Facebook</h3>
+                    <p class="text-slate-400 mb-4">Join my community and stay updated on daily life.</p>
+                    <span class="text-blue-500 font-semibold underline underline-offset-4">Join Community →</span>
+                </a>
+
+                <a href="https://www.instagram.com/nowaf.khan" target="_blank" class="p-8 bg-slate-900 border border-slate-800 rounded-2xl hover:border-pink-500 transition-all group">
+                    <h3 class="text-2xl font-bold mb-2 group-hover:text-pink-500">Instagram</h3>
+                    <p class="text-slate-400 mb-4">Follow for behind-the-scenes and high-end photography.</p>
+                    <span class="text-pink-500 font-semibold underline underline-offset-4">Follow Me →</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-black py-12 border-t border-slate-900">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="hero-font text-slate-500 text-sm tracking-widest">© 2026 NOWAF VISION | CREATING THE FUTURE</p>
+        </div>
+    </footer>
+
+</body>
+</html>
