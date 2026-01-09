@@ -2,28 +2,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nowaf Vision | Ultra Pro Portfolio</title>
+    <title>Nowaf Vision | Winter Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         /* --- VARIABLES --- */
-        :root { --neon: #00f2ff; --purple: #ba01ff; --bg: #020617; --text: #ffffff; --glass: rgba(255, 255, 255, 0.03); }
+        :root { --neon: #00f2ff; --purple: #ba01ff; --bg: #0b1121; --text: #ffffff; --glass: rgba(255, 255, 255, 0.05); }
         
         /* LIGHT THEME OVERRIDES */
-        body.light-mode { --bg: #f8fafc; --text: #020617; --glass: rgba(0, 0, 0, 0.05); --neon: #0088ff; --purple: #6d28d9; }
-        body.light-mode .neon-text { color: #020617; text-shadow: none; }
-        body.light-mode .glass-card { border-color: rgba(0,0,0,0.1); }
+        body.light-mode { --bg: #f1f5f9; --text: #0f172a; --glass: rgba(255, 255, 255, 0.6); --neon: #0ea5e9; --purple: #6d28d9; }
+        body.light-mode .neon-text { color: #0f172a; text-shadow: none; }
+        body.light-mode .snowflake { background: #cbd5e1; } /* Darker snow for light mode */
 
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; scroll-behavior: smooth; transition: background 0.5s ease, color 0.5s ease; }
-        .hero-font { font-family: 'Orbitron', sans-serif; } 
+        .hero-font { font-family: 'Orbitron', sans-serif; }
+
+        /* --- WINTER SNOW ENGINE --- */
+        #snow-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1; /* Behind text but visible */
+            overflow: hidden;
+        }
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            filter: blur(1px);
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-10vh) translateX(0); }
+            100% { transform: translateY(110vh) translateX(20px); }
+        }
 
         /* --- SETTINGS MENU STYLES --- */
         #settings-dropdown {
             display: none;
             position: absolute;
-            top: 60px;
-            right: 0;
-            width: 200px;
+            top: 60px; right: 0; width: 200px;
             background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(20px);
             border: 1px solid var(--neon);
@@ -46,7 +66,7 @@
             background: radial-gradient(circle, rgba(186, 1, 255, 0.08) 0%, transparent 60%);
             animation: liquid-flow 10s infinite alternate; z-index: -1;
         }
-        @keyframes liquid-flow { 0% { transform: translate(-10%, -10%); } 100% { transform: translate(10%, 10%); } } 
+        @keyframes liquid-flow { 0% { transform: translate(-10%, -10%); } 100% { transform: translate(10%, 10%); } }
 
         /* --- LOADER --- */
         #loader {
@@ -57,11 +77,11 @@
         .orbit-box { width: 100px; height: 100px; position: relative; }
         .orbit { border: 2px solid var(--neon); border-radius: 50%; position: absolute; inset: 0; animation: spin 2s linear infinite; }
         .orbit-inner { border: 2px solid var(--purple); border-radius: 50%; position: absolute; inset: 15px; animation: spin 1s linear reverse infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } } 
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
         /* --- UTILS --- */
         .reveal { opacity: 0; transform: translateY(30px); transition: 1.2s cubic-bezier(0.2, 1, 0.2, 1); will-change: transform, opacity; }
-        .reveal.active { opacity: 1; transform: translateY(0); } 
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
         #game-canvas {
             background: rgba(0, 0, 0, 0.4); border-radius: 1.5rem;
@@ -73,13 +93,14 @@
                         linear-gradient(rgba(2, 6, 23, 0.8), rgba(2, 6, 23, 0.95)), 
                         url('nowaf-vision.jpg');
             background-size: cover; background-position: center; min-height: 100vh;
-        } 
+        }
 
         .glass-card {
             background: var(--glass); backdrop-filter: blur(25px); color: var(--text);
             border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative; z-index: 10; /* Above snow */
         }
-        .glass-card:hover { border-color: var(--neon); box-shadow: 0 0 30px rgba(0, 242, 255, 0.1); transform: translateY(-10px) scale(1.02); } 
+        .glass-card:hover { border-color: var(--neon); box-shadow: 0 0 30px rgba(0, 242, 255, 0.1); transform: translateY(-10px) scale(1.02); }
 
         .neon-text { color: white; text-shadow: 0 0 20px rgba(186, 1, 255, 0.8); }
         .post-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
@@ -90,6 +111,7 @@
             background: var(--glass); border: 1px solid rgba(0, 242, 255, 0.3);
             border-radius: 12px; color: var(--neon); width: 60px; height: 60px;
             font-size: 1.5rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+            z-index: 20;
         }
         .d-pad button:active { background: var(--neon); color: black; transform: scale(0.9); }
         
@@ -98,7 +120,9 @@
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 15px; height: 15px; border-radius: 50%; background: var(--neon); cursor: pointer; }
     </style>
 </head>
-<body class="haptic-area"> 
+<body class="haptic-area">
+
+    <div id="snow-container"></div>
 
     <div id="loader">
         <div class="orbit-box">
@@ -106,12 +130,12 @@
             <div class="orbit-inner"></div>
         </div>
         <p class="mt-8 hero-font tracking-[0.5em] text-cyan-400 animate-pulse">SYSTEM STARTING</p>
-    </div> 
+    </div>
 
     <audio id="bgMusic" loop>
-        <source src="https://www.chosic.com/wp-content/uploads/2021/04/Rainy-Day-Romantic-Piano.mp3" type="audio/mpeg">
+        <source src="https://cdn.pixabay.com/download/audio/2022/11/22/audio_febc508520.mp3" type="audio/mpeg">
     </audio>
-    <audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio> 
+    <audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
 
     <nav class="fixed w-full z-50 border-b border-white/5 bg-slate-950/20 backdrop-blur-xl">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center relative">
@@ -144,7 +168,7 @@
                 </div>
             </div>
         </div>
-    </nav> 
+    </nav>
 
     <header class="hero-section flex items-center justify-center px-6">
         <div class="max-w-5xl text-center reveal" id="hero-reveal">
@@ -156,7 +180,7 @@
                 <button onclick="playTap(); location.href='#vault'" class="glass-card px-12 py-4 rounded-full font-bold uppercase tracking-widest text-xs border border-white/10 hover:bg-white hover:text-black transition">Explore Vault</button>
             </div>
         </div>
-    </header> 
+    </header>
 
     <section id="game-section" class="py-32 px-8 bg-slate-950/40">
         <div class="max-w-4xl mx-auto text-center">
@@ -179,7 +203,7 @@
                 </div>
             </div>
         </div>
-    </section> 
+    </section>
 
     <section id="vault" class="py-32 px-8">
         <div class="max-w-7xl mx-auto">
@@ -192,7 +216,7 @@
                         <span class="text-xs hero-font opacity-40 uppercase">YouTube Broadcast</span>
                         <button onclick="handleLike(this)" class="text-pink-500">❤️ <span class="like-count ml-2">10k</span></button>
                     </div>
-                </div> 
+                </div>
 
                 <div class="glass-card p-4 rounded-[2rem] reveal">
                     <div class="aspect-video bg-slate-900 rounded-[1.5rem] flex items-center justify-center overflow-hidden">
@@ -206,7 +230,7 @@
                 </div>
             </div>
         </div>
-    </section> 
+    </section>
 
     <section id="connect" class="py-32 bg-slate-900/20 haptic-area">
         <div class="max-w-7xl mx-auto px-8 grid md:grid-cols-3 gap-8">
@@ -223,13 +247,36 @@
                 <div class="hero-font text-sm tracking-widest">FACEBOOK</div>
             </a>
         </div>
-    </section> 
+    </section>
 
     <footer class="py-20 text-center border-t border-white/5 opacity-20">
         <p class="hero-font text-xs tracking-[0.5em]">© 2026 NOWAF VISION // ACCESS GRANTED</p>
-    </footer> 
+    </footer>
 
     <script>
+        // --- WINTER ENGINE ---
+        function createSnow() {
+            const container = document.getElementById('snow-container');
+            const particleCount = 60; // Total snowballs
+            
+            for(let i=0; i<particleCount; i++) {
+                const flake = document.createElement('div');
+                flake.classList.add('snowflake');
+                
+                // Randomize properties
+                const size = Math.random() * 5 + 2 + 'px';
+                flake.style.width = size;
+                flake.style.height = size;
+                
+                flake.style.left = Math.random() * 100 + 'vw';
+                flake.style.animationDuration = Math.random() * 3 + 5 + 's'; // Slow fall (5-8s)
+                flake.style.animationDelay = Math.random() * 5 + 's';
+                flake.style.opacity = Math.random() * 0.7 + 0.3;
+                
+                container.appendChild(flake);
+            }
+        }
+
         // --- NEW SETTINGS LOGIC ---
         function toggleSettings() {
             const menu = document.getElementById('settings-dropdown');
@@ -248,37 +295,37 @@
 
         // --- PRO LOADER LOGIC ---
         window.addEventListener('load', () => {
+            createSnow(); // Start Snow
             const loader = document.getElementById('loader');
             setTimeout(() => {
                 loader.style.transform = 'translateY(-100%)';
                 document.getElementById('hero-reveal').classList.add('active');
             }, 2000);
-        }); 
+        });
 
         // --- HAPTIC ENGINE ---
         function triggerHaptic(duration = 10) {
             if (navigator.vibrate) navigator.vibrate(duration);
-        } 
+        }
 
         document.querySelectorAll('section, nav, footer, .glass-card').forEach(el => {
             el.addEventListener('touchstart', () => triggerHaptic(5));
-        }); 
+        });
 
         function playTap() {
             const tap = document.getElementById('clickSound');
             tap.currentTime = 0; tap.play();
             triggerHaptic(20);
-        } 
+        }
 
         // --- MUSIC AUTOPLAY FIX ---
-        // Music plays on first click anywhere on screen
         document.body.addEventListener('click', () => {
             const music = document.getElementById('bgMusic');
             if(music.paused) {
                 music.volume = 0.3; 
                 music.play();
             }
-        }, { once: true }); 
+        }, { once: true });
 
         function handleLike(btn) {
             playTap();
@@ -286,13 +333,13 @@
             countTag.innerText = (parseFloat(countTag.innerText) + 0.1).toFixed(1) + 'k';
             btn.style.transform = "scale(1.5)";
             setTimeout(() => btn.style.transform = "scale(1)", 200);
-        } 
+        }
 
         // --- CYBER SNAKE GAME LOGIC ---
         const canvas = document.getElementById('game-canvas');
         const ctx = canvas.getContext('2d');
         const scoreEl = document.getElementById('score');
-        let box = 20, score = 0, snake = [{x: 9 * box, y: 10 * box}], food = {x: 5*box, y: 5*box}, d; 
+        let box = 20, score = 0, snake = [{x: 9 * box, y: 10 * box}], food = {x: 5*box, y: 5*box}, d;
 
         // Control function for both Key and Touch
         function handleMove(dir) {
@@ -308,7 +355,7 @@
             if(e.keyCode == 38) handleMove("UP");
             if(e.keyCode == 39) handleMove("RIGHT");
             if(e.keyCode == 40) handleMove("DOWN");
-        }); 
+        });
 
         function drawGame() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -318,17 +365,17 @@
                 ctx.fillRect(snake[i].x, snake[i].y, box, box);
             }
             ctx.fillStyle = "#ba01ff"; ctx.shadowColor = "#ba01ff";
-            ctx.fillRect(food.x, food.y, box, box); 
+            ctx.fillRect(food.x, food.y, box, box);
 
             let sX = snake[0].x, sY = snake[0].y;
             if(d == "LEFT") sX -= box; if(d == "UP") sY -= box;
-            if(d == "RIGHT") sX += box; if(d == "DOWN") sY += box; 
+            if(d == "RIGHT") sX += box; if(d == "DOWN") sY += box;
 
             if(sX == food.x && sY == food.y) {
                 score++; scoreEl.innerHTML = score;
                 food = { x: Math.floor(Math.random()*19+1)*box, y: Math.floor(Math.random()*19+1)*box };
                 triggerHaptic(30);
-            } else { snake.pop(); } 
+            } else { snake.pop(); }
 
             let newH = {x: sX, y: sY};
             if(sX < 0 || sX >= canvas.width || sY < 0 || sY >= canvas.height || snake.some(t => t.x == newH.x && t.y == newH.y)) {
@@ -338,7 +385,7 @@
             }
             snake.unshift(newH);
         }
-        let game = setInterval(drawGame, 120); 
+        let game = setInterval(drawGame, 120);
 
         // --- SCROLL ENGINE ---
         const observer = new IntersectionObserver((entries) => {
