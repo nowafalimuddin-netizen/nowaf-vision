@@ -1,3 +1,7 @@
+
+
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -82,8 +86,12 @@
         <p class="mt-8 hero-font tracking-[0.5em] text-cyan-400 animate-pulse">SYSTEM STARTING</p>
     </div>
 
-    <audio id="bgMusic" loop src="https://assets.mixkit.co/music/preview/mixkit-dreaming-big-31.mp3"></audio>
-    <audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+    <audio id="bgMusic" loop>
+        <source src="https://assets.mixkit.co/music/preview/mixkit-dreaming-big-31.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="clickSound">
+        <source src="https://www.soundjay.com/buttons/sounds/button-16.mp3" type="audio/mpeg">
+    </audio>
 
     <nav class="fixed w-full z-50 border-b border-white/5 bg-slate-950/20 backdrop-blur-xl">
         <div class="max-w-7xl mx-auto px-8 py-5 flex justify-between items-center">
@@ -188,17 +196,33 @@
             el.addEventListener('touchstart', () => triggerHaptic(5));
         });
 
+        // --- AUDIO ENGINE ---
+        const bgMusic = document.getElementById('bgMusic');
+        const clickSound = document.getElementById('clickSound');
+
         function playTap() {
-            const tap = document.getElementById('clickSound');
-            tap.currentTime = 0; tap.play();
+            clickSound.currentTime = 0;
+            clickSound.play().catch(()=>{}); 
             triggerHaptic(20);
         }
 
-        // --- MUSIC START ---
+        // Start background music on the first user interaction
         document.body.addEventListener('click', () => {
-            const music = document.getElementById('bgMusic');
-            music.volume = 0.4;
-            music.play();
+            if (bgMusic.paused) {
+                bgMusic.volume = 0;
+                bgMusic.play().then(() => {
+                    // Smoothly fade in volume
+                    let vol = 0;
+                    let fade = setInterval(() => {
+                        if (vol < 0.4) {
+                            vol += 0.05;
+                            bgMusic.volume = vol;
+                        } else {
+                            clearInterval(fade);
+                        }
+                    }, 200);
+                }).catch(()=>{});
+            }
         }, { once: true });
 
         function handleLike(btn) {
@@ -259,5 +283,3 @@
     </script>
 </body>
 </html>
-
-
