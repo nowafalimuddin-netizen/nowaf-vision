@@ -6,32 +6,49 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --neon: #00f2ff; --purple: #ba01ff; --bg: #020617; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: white; overflow-x: hidden; scroll-behavior: smooth; }
-        .hero-font { font-family: 'Orbitron', sans-serif; }
+        /* --- VARIABLES --- */
+        :root { --neon: #00f2ff; --purple: #ba01ff; --bg: #020617; --text: #ffffff; --glass: rgba(255, 255, 255, 0.03); }
+        
+        /* LIGHT THEME OVERRIDES */
+        body.light-mode { --bg: #f8fafc; --text: #020617; --glass: rgba(0, 0, 0, 0.05); --neon: #0088ff; --purple: #6d28d9; }
+        body.light-mode .neon-text { color: #020617; text-shadow: none; }
+        body.light-mode .glass-card { border-color: rgba(0,0,0,0.1); }
+
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; scroll-behavior: smooth; transition: background 0.5s ease, color 0.5s ease; }
+        .hero-font { font-family: 'Orbitron', sans-serif; } 
+
+        /* --- SETTINGS MENU STYLES --- */
+        #settings-dropdown {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 0;
+            width: 200px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--neon);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        body.light-mode #settings-dropdown { background: rgba(255, 255, 255, 0.95); }
 
         /* --- LIQUID GLASS MIXTURE EFFECT --- */
         .liquid-glass-mix {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
             backdrop-filter: blur(15px) saturate(150%);
             border-left: 4px solid var(--neon);
-            position: relative;
-            overflow: hidden;
+            position: relative; overflow: hidden;
         }
         .liquid-glass-mix::after {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
             background: radial-gradient(circle, rgba(186, 1, 255, 0.08) 0%, transparent 60%);
-            animation: liquid-flow 10s infinite alternate;
-            z-index: -1;
+            animation: liquid-flow 10s infinite alternate; z-index: -1;
         }
-        @keyframes liquid-flow {
-            0% { transform: translate(-10%, -10%); }
-            100% { transform: translate(10%, 10%); }
-        }
+        @keyframes liquid-flow { 0% { transform: translate(-10%, -10%); } 100% { transform: translate(10%, 10%); } } 
 
-        /* --- ADVANCED LOADING SCREEN --- */
+        /* --- LOADER --- */
         #loader {
             position: fixed; inset: 0; background: var(--bg); z-index: 9999;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -40,18 +57,15 @@
         .orbit-box { width: 100px; height: 100px; position: relative; }
         .orbit { border: 2px solid var(--neon); border-radius: 50%; position: absolute; inset: 0; animation: spin 2s linear infinite; }
         .orbit-inner { border: 2px solid var(--purple); border-radius: 50%; position: absolute; inset: 15px; animation: spin 1s linear reverse infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes spin { 100% { transform: rotate(360deg); } } 
 
-        /* --- PRO SMOOTHNESS --- */
+        /* --- UTILS --- */
         .reveal { opacity: 0; transform: translateY(30px); transition: 1.2s cubic-bezier(0.2, 1, 0.2, 1); will-change: transform, opacity; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
+        .reveal.active { opacity: 1; transform: translateY(0); } 
 
-        /* --- GAME STYLES --- */
         #game-canvas {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            cursor: crosshair;
+            background: rgba(0, 0, 0, 0.4); border-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1); cursor: crosshair;
         }
         
         .hero-section {
@@ -59,20 +73,32 @@
                         linear-gradient(rgba(2, 6, 23, 0.8), rgba(2, 6, 23, 0.95)), 
                         url('nowaf-vision.jpg');
             background-size: cover; background-position: center; min-height: 100vh;
-        }
+        } 
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.01); backdrop-filter: blur(25px);
+            background: var(--glass); backdrop-filter: blur(25px); color: var(--text);
             border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .glass-card:hover { border-color: var(--neon); box-shadow: 0 0 30px rgba(0, 242, 255, 0.1); transform: translateY(-10px) scale(1.02); }
+        .glass-card:hover { border-color: var(--neon); box-shadow: 0 0 30px rgba(0, 242, 255, 0.1); transform: translateY(-10px) scale(1.02); } 
 
         .neon-text { color: white; text-shadow: 0 0 20px rgba(186, 1, 255, 0.8); }
         .post-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
         iframe { width: 100%; aspect-ratio: 16/9; border-radius: 1.5rem; }
+
+        /* MOBILE CONTROLS */
+        .d-pad button {
+            background: var(--glass); border: 1px solid rgba(0, 242, 255, 0.3);
+            border-radius: 12px; color: var(--neon); width: 60px; height: 60px;
+            font-size: 1.5rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+        }
+        .d-pad button:active { background: var(--neon); color: black; transform: scale(0.9); }
+        
+        /* Volume Range Slider Style */
+        input[type=range] { width: 100%; height: 5px; background: #ddd; outline: none; border-radius: 5px; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 15px; height: 15px; border-radius: 50%; background: var(--neon); cursor: pointer; }
     </style>
 </head>
-<body class="haptic-area">
+<body class="haptic-area"> 
 
     <div id="loader">
         <div class="orbit-box">
@@ -80,25 +106,45 @@
             <div class="orbit-inner"></div>
         </div>
         <p class="mt-8 hero-font tracking-[0.5em] text-cyan-400 animate-pulse">SYSTEM STARTING</p>
-    </div>
+    </div> 
 
     <audio id="bgMusic" loop>
-        <source src="https://assets.mixkit.co/music/preview/mixkit-dreaming-big-31.mp3" type="audio/mpeg">
+        <source src="https://www.chosic.com/wp-content/uploads/2021/04/Rainy-Day-Romantic-Piano.mp3" type="audio/mpeg">
     </audio>
-    <audio id="clickSound">
-        <source src="https://www.soundjay.com/buttons/sounds/button-16.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio> 
 
     <nav class="fixed w-full z-50 border-b border-white/5 bg-slate-950/20 backdrop-blur-xl">
-        <div class="max-w-7xl mx-auto px-8 py-5 flex justify-between items-center">
-            <div class="hero-font text-xl font-bold tracking-tighter">NOWAF <span class="text-cyan-400">VISION</span></div>
-            <div class="flex gap-8 text-xs font-bold tracking-widest uppercase opacity-60">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center relative">
+            
+            <div class="flex items-center gap-4">
+                <div class="hero-font text-xl font-bold tracking-tighter">NOWAF <span class="text-cyan-400">VISION</span></div>
+                
+                <button onclick="toggleSettings()" class="text-2xl text-cyan-400 focus:outline-none p-2 animate-pulse">⋮</button>
+            </div>
+
+            <div class="hidden md:flex gap-8 text-xs font-bold tracking-widest uppercase opacity-60">
                 <a href="#vault" class="hover:text-cyan-400 transition">Vault</a>
                 <a href="#game-section" class="hover:text-cyan-400 transition">Arcade</a>
                 <a href="#connect" class="hover:text-cyan-400 transition">Connect</a>
             </div>
+
+            <div id="settings-dropdown">
+                <h3 class="hero-font text-cyan-400 text-xs tracking-widest mb-4 border-b border-white/10 pb-2">SYSTEM CONTROL</h3>
+                
+                <div class="mb-5">
+                    <label class="text-[10px] uppercase tracking-widest mb-2 block opacity-70">Theme</label>
+                    <button onclick="toggleTheme()" class="w-full py-2 border border-cyan-400/50 rounded text-[10px] hero-font hover:bg-cyan-400/20 transition">
+                        DARK / BRIGHT
+                    </button>
+                </div>
+
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest mb-2 block opacity-70">Music Volume</label>
+                    <input type="range" min="0" max="1" step="0.1" value="0.3" oninput="setVolume(this.value)">
+                </div>
+            </div>
         </div>
-    </nav>
+    </nav> 
 
     <header class="hero-section flex items-center justify-center px-6">
         <div class="max-w-5xl text-center reveal" id="hero-reveal">
@@ -107,23 +153,33 @@
             </h1>
             <p class="text-cyan-400 hero-font tracking-[1em] uppercase text-sm md:text-xl mb-12">Visual Architect</p>
             <div class="flex justify-center gap-6">
-                <button onclick="playTap()" class="glass-card px-12 py-4 rounded-full font-bold uppercase tracking-widest text-xs border border-white/10 hover:bg-white hover:text-black transition">Explore Vault</button>
+                <button onclick="playTap(); location.href='#vault'" class="glass-card px-12 py-4 rounded-full font-bold uppercase tracking-widest text-xs border border-white/10 hover:bg-white hover:text-black transition">Explore Vault</button>
             </div>
         </div>
-    </header>
+    </header> 
 
     <section id="game-section" class="py-32 px-8 bg-slate-950/40">
         <div class="max-w-4xl mx-auto text-center">
             <h2 class="hero-font text-3xl mb-12 tracking-tighter liquid-glass-mix py-4 px-6 inline-block rounded-r-xl">NEON SNAKE ARCADE</h2>
             <div class="glass-card p-6 rounded-[2.5rem] relative overflow-hidden">
                 <canvas id="game-canvas" width="400" height="400" class="w-full max-w-[400px] mx-auto"></canvas>
+                
+                <div class="md:hidden mt-8 grid grid-cols-3 gap-2 w-48 mx-auto d-pad">
+                    <div></div>
+                    <button ontouchstart="handleMove('UP')">▲</button>
+                    <div></div>
+                    <button ontouchstart="handleMove('LEFT')">◀</button>
+                    <button ontouchstart="handleMove('DOWN')">▼</button>
+                    <button ontouchstart="handleMove('RIGHT')">▶</button>
+                </div>
+
                 <div class="mt-6 flex justify-between items-center hero-font text-[10px] tracking-widest text-slate-500">
                     <span>SCORE: <span id="score" class="text-cyan-400">0</span></span>
-                    <span class="animate-pulse">USE ARROWS OR SWIPE TO PLAY</span>
+                    <span class="animate-pulse">CONTROLS: ARROWS / D-PAD</span>
                 </div>
             </div>
         </div>
-    </section>
+    </section> 
 
     <section id="vault" class="py-32 px-8">
         <div class="max-w-7xl mx-auto">
@@ -134,46 +190,62 @@
                     <iframe src="https://www.youtube.com/embed?listType=user_uploads&list=nowafvision" frameborder="0" allowfullscreen></iframe>
                     <div class="mt-6 flex justify-between px-2">
                         <span class="text-xs hero-font opacity-40 uppercase">YouTube Broadcast</span>
-                        <button onclick="handleLike(this)" class="text-pink-500">❤️ <span class="like-count text-white ml-2">10k</span></button>
+                        <button onclick="handleLike(this)" class="text-pink-500">❤️ <span class="like-count ml-2">10k</span></button>
                     </div>
-                </div>
+                </div> 
 
                 <div class="glass-card p-4 rounded-[2rem] reveal">
                     <div class="aspect-video bg-slate-900 rounded-[1.5rem] flex items-center justify-center overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f" class="w-full h-full object-cover opacity-40" alt="">
-                        <div class="absolute hero-font text-xs tracking-widest bg-black/60 px-4 py-2 rounded-full">LIVE FEED</div>
+                        <div class="absolute hero-font text-xs tracking-widest bg-black/60 px-4 py-2 rounded-full text-white">LIVE FEED</div>
                     </div>
                     <div class="mt-6 flex justify-between px-2">
                         <span class="text-xs hero-font opacity-40 uppercase">Instagram Capture</span>
-                        <button onclick="handleLike(this)" class="text-pink-500">❤️ <span class="like-count text-white ml-2">4.2k</span></button>
+                        <button onclick="handleLike(this)" class="text-pink-500">❤️ <span class="like-count ml-2">4.2k</span></button>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </section> 
 
     <section id="connect" class="py-32 bg-slate-900/20 haptic-area">
         <div class="max-w-7xl mx-auto px-8 grid md:grid-cols-3 gap-8">
-            <a href="https://youtube.com/@nowafvision" target="_blank" onclick="playTap()" class="glass-card p-12 rounded-[3rem] text-center reveal">
+            <a href="https://www.youtube.com/@nowafvision" target="_blank" onclick="playTap()" class="glass-card p-12 rounded-[3rem] text-center reveal">
                 <div class="text-4xl mb-4">📺</div>
                 <div class="hero-font text-sm tracking-widest">YOUTUBE</div>
             </a>
-            <a href="https://instagram.com/nowaf.khan" target="_blank" onclick="playTap()" class="glass-card p-12 rounded-[3rem] text-center reveal">
+            <a href="https://www.instagram.com/nowaf.khan" target="_blank" onclick="playTap()" class="glass-card p-12 rounded-[3rem] text-center reveal">
                 <div class="text-4xl mb-4">📸</div>
                 <div class="hero-font text-sm tracking-widest">INSTAGRAM</div>
             </a>
-            <a href="#" target="_blank" onclick="playTap()" class="glass-card p-12 rounded-[3rem] text-center reveal">
+            <a href="https://www.facebook.com/nowaf.vision" target="_blank" onclick="playTap()" class="glass-card p-12 rounded-[3rem] text-center reveal">
                 <div class="text-4xl mb-4">🌀</div>
                 <div class="hero-font text-sm tracking-widest">FACEBOOK</div>
             </a>
         </div>
-    </section>
+    </section> 
 
     <footer class="py-20 text-center border-t border-white/5 opacity-20">
         <p class="hero-font text-xs tracking-[0.5em]">© 2026 NOWAF VISION // ACCESS GRANTED</p>
-    </footer>
+    </footer> 
 
     <script>
+        // --- NEW SETTINGS LOGIC ---
+        function toggleSettings() {
+            const menu = document.getElementById('settings-dropdown');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+            playTap();
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            playTap();
+        }
+
+        function setVolume(value) {
+            document.getElementById('bgMusic').volume = value;
+        }
+
         // --- PRO LOADER LOGIC ---
         window.addEventListener('load', () => {
             const loader = document.getElementById('loader');
@@ -181,45 +253,32 @@
                 loader.style.transform = 'translateY(-100%)';
                 document.getElementById('hero-reveal').classList.add('active');
             }, 2000);
-        });
+        }); 
 
-        // --- HAPTIC ENGINE (Touch any section) ---
+        // --- HAPTIC ENGINE ---
         function triggerHaptic(duration = 10) {
             if (navigator.vibrate) navigator.vibrate(duration);
-        }
+        } 
 
         document.querySelectorAll('section, nav, footer, .glass-card').forEach(el => {
             el.addEventListener('touchstart', () => triggerHaptic(5));
-        });
-
-        // --- AUDIO ENGINE ---
-        const bgMusic = document.getElementById('bgMusic');
-        const clickSound = document.getElementById('clickSound');
+        }); 
 
         function playTap() {
-            clickSound.currentTime = 0;
-            clickSound.play().catch(()=>{}); 
+            const tap = document.getElementById('clickSound');
+            tap.currentTime = 0; tap.play();
             triggerHaptic(20);
-        }
+        } 
 
-        // Start background music on the first user interaction
+        // --- MUSIC AUTOPLAY FIX ---
+        // Music plays on first click anywhere on screen
         document.body.addEventListener('click', () => {
-            if (bgMusic.paused) {
-                bgMusic.volume = 0;
-                bgMusic.play().then(() => {
-                    // Smoothly fade in volume
-                    let vol = 0;
-                    let fade = setInterval(() => {
-                        if (vol < 0.4) {
-                            vol += 0.05;
-                            bgMusic.volume = vol;
-                        } else {
-                            clearInterval(fade);
-                        }
-                    }, 200);
-                }).catch(()=>{});
+            const music = document.getElementById('bgMusic');
+            if(music.paused) {
+                music.volume = 0.3; 
+                music.play();
             }
-        }, { once: true });
+        }, { once: true }); 
 
         function handleLike(btn) {
             playTap();
@@ -227,21 +286,29 @@
             countTag.innerText = (parseFloat(countTag.innerText) + 0.1).toFixed(1) + 'k';
             btn.style.transform = "scale(1.5)";
             setTimeout(() => btn.style.transform = "scale(1)", 200);
-        }
+        } 
 
         // --- CYBER SNAKE GAME LOGIC ---
         const canvas = document.getElementById('game-canvas');
         const ctx = canvas.getContext('2d');
         const scoreEl = document.getElementById('score');
-        let box = 20, score = 0, snake = [{x: 9 * box, y: 10 * box}], food = {x: 5*box, y: 5*box}, d;
+        let box = 20, score = 0, snake = [{x: 9 * box, y: 10 * box}], food = {x: 5*box, y: 5*box}, d; 
+
+        // Control function for both Key and Touch
+        function handleMove(dir) {
+            if(dir == "LEFT" && d != "RIGHT") d = "LEFT";
+            if(dir == "UP" && d != "DOWN") d = "UP";
+            if(dir == "RIGHT" && d != "LEFT") d = "RIGHT";
+            if(dir == "DOWN" && d != "UP") d = "DOWN";
+            triggerHaptic(10);
+        }
 
         document.addEventListener("keydown", e => {
-            if(e.keyCode == 37 && d != "RIGHT") d = "LEFT";
-            if(e.keyCode == 38 && d != "DOWN") d = "UP";
-            if(e.keyCode == 39 && d != "LEFT") d = "RIGHT";
-            if(e.keyCode == 40 && d != "UP") d = "DOWN";
-            triggerHaptic(5);
-        });
+            if(e.keyCode == 37) handleMove("LEFT");
+            if(e.keyCode == 38) handleMove("UP");
+            if(e.keyCode == 39) handleMove("RIGHT");
+            if(e.keyCode == 40) handleMove("DOWN");
+        }); 
 
         function drawGame() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -251,25 +318,27 @@
                 ctx.fillRect(snake[i].x, snake[i].y, box, box);
             }
             ctx.fillStyle = "#ba01ff"; ctx.shadowColor = "#ba01ff";
-            ctx.fillRect(food.x, food.y, box, box);
+            ctx.fillRect(food.x, food.y, box, box); 
 
             let sX = snake[0].x, sY = snake[0].y;
             if(d == "LEFT") sX -= box; if(d == "UP") sY -= box;
-            if(d == "RIGHT") sX += box; if(d == "DOWN") sY += box;
+            if(d == "RIGHT") sX += box; if(d == "DOWN") sY += box; 
 
             if(sX == food.x && sY == food.y) {
                 score++; scoreEl.innerHTML = score;
                 food = { x: Math.floor(Math.random()*19+1)*box, y: Math.floor(Math.random()*19+1)*box };
                 triggerHaptic(30);
-            } else { snake.pop(); }
+            } else { snake.pop(); } 
 
             let newH = {x: sX, y: sY};
             if(sX < 0 || sX >= canvas.width || sY < 0 || sY >= canvas.height || snake.some(t => t.x == newH.x && t.y == newH.y)) {
-                clearInterval(game); triggerHaptic([50, 50, 50]);
+                // Reset Game
+                snake = [{x: 9 * box, y: 10 * box}]; d = null; score = 0; scoreEl.innerHTML = score;
+                triggerHaptic([50, 50, 50]);
             }
             snake.unshift(newH);
         }
-        let game = setInterval(drawGame, 120);
+        let game = setInterval(drawGame, 120); 
 
         // --- SCROLL ENGINE ---
         const observer = new IntersectionObserver((entries) => {
