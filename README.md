@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="google-site-verification" content="UDBMyidqHaPIXk4PPKCqdxjyA-zHEpt5-Ykek4RMfE4" /> content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="UDBMyidqHaPIXk4PPKCqdxjyA-zHEpt5-Ykek4RMfE4" />
     
     <title>Nowaf Vision | Winter Edition</title>
     <meta name="title" content="Nowaf Vision | Visual Architect">
