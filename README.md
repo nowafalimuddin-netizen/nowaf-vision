@@ -1,6 +1,4 @@
- <!DOCTYPE html>
-<html>
-  <head>
+ <head>
     <title>🙏Hello,Sir🙏 </title>
     <link rel="stylesheet" href="styles.css" />
   </head>
