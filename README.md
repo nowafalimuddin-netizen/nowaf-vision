@@ -1,5 +1,15 @@
-
-<html lang="en">
+ <!DOCTYPE html>
+<html>
+  <head>
+    <title>🙏Hello,Sir🙏 </title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+      <h1 class="title">🙏Hello,Sir🙏!</h1>
+      <p id="currentTime"></p>
+      <script src="script.js"></script>
+  </body>
+</html<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="google-site-verification" content="UDBMyidqHaPIXk4PPKCqdxjyA-zHEpt5-Ykek4RMfE4" />
@@ -129,9 +139,6 @@
         }
         .d-pad button:active { background: var(--neon); color: black; transform: scale(0.9); }
         
-        input[type=range] { width: 100%; height: 5px; background: #ddd; outline: none; border-radius: 5px; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 15px; height: 15px; border-radius: 50%; background: var(--neon); cursor: pointer; }
-
         /* VIDEO MODAL STYLES */
         #videoModal { transition: opacity 0.4s ease; }
     </style>
@@ -147,11 +154,6 @@
         </div>
         <p class="mt-8 hero-font tracking-[0.5em] text-cyan-400 animate-pulse">SYSTEM STARTING</p>
     </div> 
-
-    <audio id="bgMusic" loop>
-        <source src="https://cdn.pixabay.com/download/audio/2022/11/22/audio_febc508520.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio> 
 
     <nav class="fixed w-full z-50 border-b border-white/5 bg-slate-950/20 backdrop-blur-xl">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center relative">
@@ -172,10 +174,6 @@
                     <label class="text-[10px] uppercase tracking-widest mb-2 block opacity-70">Theme</label>
                     <button onclick="toggleTheme()" class="w-full py-2 border border-cyan-400/50 rounded text-[10px] hero-font hover:bg-cyan-400/20 transition">DARK / BRIGHT</button>
                 </div> 
-                <div>
-                    <label class="text-[10px] uppercase tracking-widest mb-2 block opacity-70">Music Volume</label>
-                    <input type="range" min="0" max="1" step="0.1" value="0.3" oninput="setVolume(this.value)">
-                </div>
             </div>
         </div>
     </nav> 
@@ -197,11 +195,11 @@
                 <canvas id="game-canvas" width="400" height="400" class="w-full max-w-[400px] mx-auto"></canvas>
                 <div class="md:hidden mt-8 grid grid-cols-3 gap-2 w-48 mx-auto d-pad">
                     <div></div>
-                    <button ontouchstart="handleMove('UP')">▲</button>
+                    <button onclick="handleMove('UP')" ontouchstart="handleMove('UP')">▲</button>
                     <div></div>
-                    <button ontouchstart="handleMove('LEFT')">◀</button>
-                    <button ontouchstart="handleMove('DOWN')">▼</button>
-                    <button ontouchstart="handleMove('RIGHT')">▶</button>
+                    <button onclick="handleMove('LEFT')" ontouchstart="handleMove('LEFT')">◀</button>
+                    <button onclick="handleMove('DOWN')" ontouchstart="handleMove('DOWN')">▼</button>
+                    <button onclick="handleMove('RIGHT')" ontouchstart="handleMove('RIGHT')">▶</button>
                 </div> 
                 <div class="mt-6 flex justify-between items-center hero-font text-[10px] tracking-widest text-slate-500">
                     <span>SCORE: <span id="score" class="text-cyan-400">0</span></span>
@@ -323,10 +321,6 @@
             playTap();
         } 
 
-        function setVolume(value) {
-            document.getElementById('bgMusic').volume = value;
-        } 
-
         // --- LOADER ---
         window.addEventListener('load', () => {
             createSnow(); 
@@ -343,19 +337,9 @@
         } 
 
         function playTap() {
-            const tap = document.getElementById('clickSound');
-            tap.currentTime = 0; tap.play().catch(()=>{});
+            // Audio elements removed for silent interactions
             triggerHaptic(20);
         } 
-
-        // --- MUSIC AUTOPLAY ---
-        document.body.addEventListener('click', () => {
-            const music = document.getElementById('bgMusic');
-            if(music.paused) {
-                music.volume = 0.3; 
-                music.play().catch(()=>{});
-            }
-        }, { once: true }); 
 
         function handleLike(btn) {
             playTap();
@@ -380,6 +364,8 @@
         } 
 
         document.addEventListener("keydown", e => {
+            if ([37, 38, 39, 40].includes(e.keyCode)) e.preventDefault();
+            
             if(e.keyCode == 37) handleMove("LEFT");
             if(e.keyCode == 38) handleMove("UP");
             if(e.keyCode == 39) handleMove("RIGHT");
@@ -401,7 +387,7 @@
 
             if(sX == food.x && sY == food.y) {
                 score++; scoreEl.innerHTML = score;
-                food = { x: Math.floor(Math.random()*19+1)*box, y: Math.floor(Math.random()*19+1)*box };
+                food = { x: Math.floor(Math.random()*20)*box, y: Math.floor(Math.random()*20)*box };
             } else { if(d) snake.pop(); } 
 
             let newH = {x: sX, y: sY};
